@@ -10,6 +10,7 @@ export function App() {
         <Route path="/" component={Home} exact />
         <Route path="/movie/:id" component={MovieDetail} />
       </Switch>
+    
     </header>
   );
 }

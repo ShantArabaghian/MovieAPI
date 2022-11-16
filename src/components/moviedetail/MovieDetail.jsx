@@ -2,12 +2,14 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import { Link } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
+import { CDBFooter, CDBBox} from "cdbreact";
+
 import "../home/Home.css";
 import React, { useState, useEffect } from "react";
 import { fetchMovieDetail } from "../../apilists";
 import "react-bootstrap-carousel/dist/react-bootstrap-carousel.css";
 import ReactStars from "react-rating-stars-component";
-
+import "./Detail.css"
 export function MovieDetail({ match }) {
   let params = match.params;
   let genres = [];
@@ -28,15 +30,16 @@ export function MovieDetail({ match }) {
     genresList = genres.map((g, i) => {
       return (
         <li className="list-inline-item" key={i}>
-          <h1 className="btn btn-outline-success">{g.name}</h1>
+          <h1 className="button">{g.name}</h1>
         </li>
       );
     });
   }
-
+  const url ="http://image.tmdb.org/t/p/original/"
+console.log(genresList)
   return (
     <>
-      <Navbar bg="light" expand="lg">
+      <Navbar bg="light" className="navbar fixed-top navbar-light bg-light">
         <Container style={{ textAlign: "center" }}>
           <Link className="NavLink" to="/">
             {" "}
@@ -50,10 +53,10 @@ export function MovieDetail({ match }) {
       </Navbar>
       <div className="container">
         <div>
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", marginTop:"90px" }}>
             <img
               className="img-fluid"
-              src={`http://image.tmdb.org/t/p/original/${detail.backdrop_path}`}
+              src={`${url}${detail.backdrop_path}`}
               alt={detail.title}
             ></img>
           </div>
@@ -115,6 +118,29 @@ export function MovieDetail({ match }) {
             </p>
           </div>
         </div>
+        <CDBFooter className="shadow">
+          <CDBBox
+            display="flex"
+            justifyContent="between"
+            alignItems="center"
+            className="mx-auto py-4 flex-wrap"
+            style={{ width: "100%" }}
+          >
+            <CDBBox display="flex" alignItems="center">
+              <a href="/"
+                style={{ color: "white" }}
+                className="ml-4 h5 mb-0 font-weight-bold"
+              >
+                MOVIEDB
+              </a>
+            </CDBBox>
+            <CDBBox>
+              <small style={{ color: "white" }} className="ml-2">
+                &copy; ShantA, 2022. All rights reserved.
+              </small>
+            </CDBBox>
+          </CDBBox>
+        </CDBFooter>
       </div>
     </>
   );

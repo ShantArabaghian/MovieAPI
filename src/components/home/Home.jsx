@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from "react";
-import Container from "react-bootstrap/Container";
 import "./Home.css";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import { CDBFooter, CDBBox} from "cdbreact";
 import RBCarousel from "react-bootstrap-carousel";
 import ReactStars from "react-rating-stars-component";
-
-import { fetchMovies, fetchGenre, fetchMovieByGenre } from "../../apilists";
+import {
+  fetchMovies,
+  fetchGenre,
+  fetchMovieByGenre,
+} from "../../apilists";
 import "react-bootstrap-carousel/dist/react-bootstrap-carousel.css";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import AOS from "aos";
+import Fade from 'react-reveal/Fade';
 import "aos/dist/aos.css";
 
 export function Home() {
   const [nowPlaying, setNowPlaying] = useState([]);
 
+  
   const [genres, setGenres] = useState([]);
   const [movieByGenre, setMovieByGenre] = useState([]);
   let [page, setPage] = useState(1);
@@ -27,10 +29,11 @@ export function Home() {
       setGenres(await fetchGenre());
       setMovieByGenre(await fetchMovieByGenre(28));
       AOS.init({ duration: 1000 });
+
     };
     fetchAPI();
   }, []);
-
+  
   const loadMore = async () => {
     setPage((page += 1));
     const movie = await fetchMovieByGenre(genreId, page);
@@ -43,26 +46,31 @@ export function Home() {
     }
     setMovieByGenre(newMovies);
   };
-
+  const goToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+    });
+};
   const handleGenreClick = async (genreId) => {
     setMovieByGenre(await fetchMovieByGenre(genreId, page));
     setGenreid(genreId);
+    removeSlide();
+    goToTop()
   };
+  function removeSlide() {
+    const x = document.getElementById("slideremover");
+  
+      x.style.display = "none";
+    
+  }
 
   const genreList = genres.map((item, index) => {
     return (
-      <li
-        className="list-inline-item"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "auto",
-          gridtemplaterows: "auto",
-          textAlign: "center",
-          width: "100%",
-        }}
-        key={index}
-      >
-        <button
+     
+      <li className="list-inline-item" key={index}>
+        
+        <button 
           type="button"
           className="btn btn-outline-success"
           onClick={() => {
@@ -73,7 +81,9 @@ export function Home() {
         </button>
       </li>
     );
-  });
+    
+  });    
+
   const ReadMore = ({ children }) => {
     const text = children;
     const [isReadMore, setIsReadMore] = useState(true);
@@ -95,14 +105,10 @@ export function Home() {
   };
   const movieList = movieByGenre.map((item, index) => {
     return (
-      <div data-aos="zoom-in" className="col-md-4 col-sm-6" key={index}>
-        <div className="card">
-          <Link to={`/movie/${item.id}`}>
-            <img
-              className="img-fluid"
-              src={item.poster}
-              alt={item.title}
-            ></img>
+      <div className=" col-md-3 col-sm-2" key={index}>
+       <Fade bottom>  <div  style={{marginTop:'40px'}} >
+          <Link   to={`/movie/${item.id}`}>
+            <img className="img-fluid" src={item.poster} alt={item.title}></img>
           </Link>
         </div>
         <div className="mt-3">
@@ -121,18 +127,18 @@ export function Home() {
           <span style={{ color: "whitesmoke" }}>
             <ReadMore>{item.overview}</ReadMore>
           </span>
-        </div>
+        </div></Fade> 
       </div>
     );
   });
   const movies = nowPlaying.slice(0, 6).map((item, index) => {
     return (
-      <div style={{ height: 500, width: "100%" }} key={index}>
+      <div style={{ height: 750, width: "100%" }} key={index}>
         <div className="carousel-center">
           <Link to={`/movie/${item.id}`}>
             {" "}
             <img
-              style={{ height: 600 }}
+              style={{ height: 570 }}
               src={item.backPoster}
               alt={item.title}
             />
@@ -151,22 +157,28 @@ export function Home() {
 
   return (
     <>
-      <Navbar bg="light" expand="lg">
-        <Container style={{ textAlign: "center" }}>
-          <Navbar.Brand to="/">MOVIEDB</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav>
-              <NavDropdown title="Genres" id="basic-nav-dropdown">
-                <NavDropdown.Item>{genreList}</NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
-      <div className="container">
-        <div className="col">
+      <div className="navbar fixed-top bg-dark">
+        <h1
+          style={{
+            fontSize:"20px",
+            color: "white",
+            textAlign: "center",
+            marginBottom: "10px",
+            marginLeft: "5px",
+          }}
+        >       <a href="/"
+        style={{ color: "white", padding:"10px" , fontSize:"25px"}}
+        className="ml-4 h5 mb-0 font-weight-bold"
+      >
+        MOVIEDB
+      </a><br/>
+          Select Category
+        </h1>
+        <div className="genrelist">
+        <h2>{genreList}</h2></div>
+      </div>
+      <div   className="container">
+        <div id="slideremover" style={{ marginTop: "125px" }}>
           <RBCarousel
             className="carrousel"
             autoplay={true}
@@ -178,21 +190,40 @@ export function Home() {
             {movies}
           </RBCarousel>
         </div>
-        <div>
-          <div>
-            <div className="col"></div>
-          </div>
-        </div>
-
-        <div className="row mt-3">{movieList}</div>
-
-        <button
-          style={{ marginBottom: "10px" }}
+        <div   className="movieslist">
+      <div className="row mt-2 ">  {movieList}</div>
+      <button
+          style={{ fontSize:"20px" }}
           className="btn btn-outline-success"
           onClick={loadMore}
         >
           Load more...
         </button>
+        </div>
+      
+        <CDBFooter className="shadow">
+          <CDBBox
+            display="flex"
+            justifyContent="between"
+            alignItems="center"
+            className="mx-auto py-4 flex-wrap"
+            style={{ width: "90%" }}
+          >
+            <CDBBox display="flex" alignItems="center">
+              <a href="/"
+                style={{ color: "white" }}
+                className="ml-4 h5 mb-0 font-weight-bold"
+              >
+                MOVIEDB
+              </a>
+            </CDBBox>
+            <CDBBox>
+              <small style={{ color: "white" }} className="ml-2">
+                &copy; ShantA, 2022. All rights reserved.
+              </small>
+            </CDBBox>
+          </CDBBox>
+        </CDBFooter>
       </div>
     </>
   );

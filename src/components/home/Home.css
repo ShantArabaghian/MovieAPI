@@ -12,9 +12,56 @@
 .carousel{
    margin-top: 10px;
    padding: 0;
+
+}
+.movieslist{
+    padding: 50px;
+    
+}
+.genrelist h1{
+   font-size: 40px;
+}
+.genrelist button:active{
+background-color: blue;
 }
 @media screen and (max-width: 1060px) {
     .carousel{
         display: none;
+    }
+  
+    .genrelist button{
+        font-size: 10px;
+        margin: 0 auto;
+    padding: 10px; 
+   }
+    .genrelist {
+        margin-bottom: 11rem;
+        height: 5px;
+    }
+  }
+  @media screen and (min-width: 768px) and (max-width:912px) {
+
+    .genrelist button{
+        font-size: 20px;
+
+   }
+    .genrelist {
+        margin-bottom: 10rem;
+     
+    }
+  }
+  @media screen and (width: 280px) {
+    .carousel{
+        display: none;
+    }
+
+    .genrelist button{
+        font-size: 10px;
+        margin: 0 auto;
+    padding: 6px; 
+   }
+    .genrelist {
+        margin-bottom: 12rem;
+        height: 5px;
     }
   }
